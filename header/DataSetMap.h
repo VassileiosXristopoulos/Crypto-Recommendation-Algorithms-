@@ -23,7 +23,7 @@ public:
     double TrueDistance(Item*item,string mode);
     int size();
     Item* at(int index);
-    void InsertFile(string file);
+    void InsertFile(const string file);
     void erase(Item *);
     void clean();
 };

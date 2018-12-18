@@ -20,7 +20,6 @@ class ClusterMaster {
 private:
     bool notFinished = true;
     bool canRepeat = false;
-    bool complete;
     DataSetMap* Dataset;
     vector<Cluster*> Clusters;
     vector<int>Choises;
@@ -28,7 +27,6 @@ private:
     cube* hypercube_master;
     Config_info config_info;
     string metric;
-    string output_file;
     ofstream outfile;
 
     void Initialization();
@@ -41,12 +39,14 @@ private:
     void Update();
     void SetNextChoise();
     void ResetDataset();
-    void PrintResults(double);
+    //void PrintResults(double);
     vector<double> Silhouette();
+    void SetupParameters();
 public:
-    ClusterMaster(Config_info, DataSetMap*, vector<int>,string&,string&,bool);
+    ClusterMaster(vector<int>);
     ~ClusterMaster();
     void Clustering();
+    vector<Cluster*> GetClusters();
 
 
 

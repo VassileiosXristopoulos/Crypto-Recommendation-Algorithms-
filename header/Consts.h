@@ -6,3 +6,8 @@
 #define RECOMMENDATION_CONSTS_H
 
 #endif //RECOMMENDATION_CONSTS_H
+class Consts{
+public:
+    static constexpr const char* vectorizedTweetFile = "../Input/twitter_dataset_small_v2.csv";
+    static constexpr const char* metric = "cosine";
+};

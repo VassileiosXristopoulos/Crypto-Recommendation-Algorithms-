@@ -53,7 +53,7 @@ Item *DataSetMap::at(int index) {
     return Map[index];
 }
 
-void DataSetMap::InsertFile(string inputFile) {
+void DataSetMap::InsertFile(const string inputFile) {
     string FileLine;
     ifstream file(inputFile);
 

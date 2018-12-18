@@ -6,6 +6,7 @@
 
 #include "../header/ClusterMaster.h"
 #include "../header/Util.h"
+#include "../header/Consts.h"
 #include <ctime>
 #include <random>
 #include <fstream>
@@ -16,15 +17,14 @@ normal_distribution<float> distribution(0,1);
 /**
  * Constructor
  */
-ClusterMaster::ClusterMaster(Config_info config_info, DataSetMap* set, vector<int> V,string& metric,string& output_file,
-        bool
-complete) {
+ClusterMaster::ClusterMaster(vector<int> V) {
 
-    outfile.open(output_file);
-    this->complete = complete; // for complete printing
-    this->config_info = config_info;
-    this->metric = metric;
-    this->output_file = output_file;
+    this->Dataset = new DataSetMap();
+    Dataset->InsertFile(Consts::vectorizedTweetFile);
+
+    SetupParameters();
+
+    this->metric = Consts::metric;
 
     this->Clusters = vector<Cluster*>((unsigned long)config_info.k);
     for(int i=0;i<config_info.k;i++){
@@ -32,26 +32,21 @@ complete) {
     }
 
 
-    if(V[0] == 0 && V[1] == 0 && V[2] == 0){ // if no choise is given from user, run all cases
-        Choises = vector<int>(3,1); // 3 positions, value 1 for all (1st choise)
-        canRepeat = true;
+
+    for(int i=0;i<3;i++){
+        Choises.push_back(V[i]);
     }
-    else{ // choise is given from user, choose that choise
-        for(int i=0;i<3;i++){
-            Choises.push_back(V[i]);
-        }
-    }
+
     lsh_master= nullptr;
     hypercube_master= nullptr;
-    // we nead this dataset at every case because of initialization step
-    this->Dataset = set; // Keep a simple array with the dataset
+
     switch (Choises[1]){
         case 2:
-            lsh_master = new lsh(config_info.lsh_k,config_info.lsh_L,config_info.w, metric,set);
+            lsh_master = new lsh(config_info.lsh_k,config_info.lsh_L,config_info.w, metric,this->Dataset);
             break;
         case 3:
             hypercube_master = new cube(config_info.cube_k,config_info.w,config_info.cube_probes,config_info.cube_M,metric,
-                    set);
+                    this->Dataset);
             break;
         default:
             break;
@@ -280,20 +275,11 @@ void ClusterMaster::Assignement() {
  * Perform clustering
  */
 void ClusterMaster::Clustering() {
-    do{
-        clock_t begin = clock();
-        this->Initialization();
-        while( notFinished ){
-            this->Assignement();
-            this->Update();
-        }
-        clock_t end = clock();
-        PrintResults(double(end - begin) / CLOCKS_PER_SEC);
-        SetNextChoise();
-        ResetDataset();
-        notFinished = true;
-    }while(canRepeat);
-
+    this->Initialization();
+    while( notFinished ){
+        this->Assignement();
+        this->Update();
+    }
 }
 
 
@@ -471,47 +457,7 @@ void ClusterMaster::RangeSearchAssignment(string& method) {
     delete (&method);
 }
 
-void ClusterMaster::PrintResults(double elapsed_time) {
 
-    outfile <<"Algorithm " << Choises[0] <<"."<<Choises[1]<<"."<<Choises[2]<<endl<<endl;
-    for(unsigned int i=0; i<Clusters.size();i++){
-        outfile <<"CLUSTER-"<<i+1<<" { size:"<<Clusters[i]->size() <<" Centroid: ";
-        if(Choises[2] == 1){ //kmeans-update
-            outfile << "[ ";
-            for (double j : Clusters[i]->GetCentroid()->getContent()) {
-                outfile<< j <<" ";
-            }
-            outfile<<"] }"<<endl;
-        }
-        else if(Choises[2] == 2){ //k-medoids update
-           outfile <<Clusters[i]->GetCentroid()->getName() <<" }"<<endl;
-        }
-    }
-    outfile<<endl;
-    outfile<<"Clustering time: "<<elapsed_time<<endl;
-    vector<double>silhouette = Silhouette();
-    outfile<< "Silhouette :[";
-    if(silhouette.size()>0){
-        outfile << silhouette[0];
-        for(unsigned int j=1;j<silhouette.size();j++){
-            outfile << ","<<silhouette[j];
-        }
-    }
-    outfile<<"]"<<endl;
-
-    if(complete){ //complete printing
-        outfile << "/*------------------- Items in each cluster -----------------*/"<<endl;
-        for(unsigned int i=0; i<Clusters.size();i++) {
-            outfile << "CLUSTER-" << i + 1 <<" { ";
-            for(auto const& j: Clusters[i]->GetMembers()){
-                outfile << j.first <<" ";
-            }
-            outfile<<" }"<<endl;
-        }
-    }
-    outfile<<endl<<endl<<endl;
-
-}
 
 vector<Item *> ClusterMaster::GenericFindinRange(string &method, Item * centroid, double r) {
     if(method == "lsh"){
@@ -603,6 +549,61 @@ vector<double> ClusterMaster::Silhouette() {
     return SilhouetteVector;
 }
 
+void ClusterMaster::SetupParameters() {
+    this->config_info.k = 10;
+    this->config_info.lsh_k = 500;
+    this->config_info.lsh_L = 5;
+    this->config_info.w = 400;
+    this->config_info.cube_k = 3;
+    this->config_info.cube_M = 10000;
+    this->config_info.cube_probes = 8;
+}
+
+vector<Cluster *> ClusterMaster::GetClusters() {
+    return Clusters;
+}
 
 
 
+
+/*void ClusterMaster::PrintResults(double elapsed_time) {
+
+    outfile <<"Algorithm " << Choises[0] <<"."<<Choises[1]<<"."<<Choises[2]<<endl<<endl;
+    for(unsigned int i=0; i<Clusters.size();i++){
+        outfile <<"CLUSTER-"<<i+1<<" { size:"<<Clusters[i]->size() <<" Centroid: ";
+        if(Choises[2] == 1){ //kmeans-update
+            outfile << "[ ";
+            for (double j : Clusters[i]->GetCentroid()->getContent()) {
+                outfile<< j <<" ";
+            }
+            outfile<<"] }"<<endl;
+        }
+        else if(Choises[2] == 2){ //k-medoids update
+           outfile <<Clusters[i]->GetCentroid()->getName() <<" }"<<endl;
+        }
+    }
+    outfile<<endl;
+    outfile<<"Clustering time: "<<elapsed_time<<endl;
+    vector<double>silhouette = Silhouette();
+    outfile<< "Silhouette :[";
+    if(silhouette.size()>0){
+        outfile << silhouette[0];
+        for(unsigned int j=1;j<silhouette.size();j++){
+            outfile << ","<<silhouette[j];
+        }
+    }
+    outfile<<"]"<<endl;
+
+    if(complete){ //complete printing
+
+        for(unsigned int i=0; i<Clusters.size();i++) {
+            outfile << "CLUSTER-" << i + 1 <<" { ";
+            for(auto const& j: Clusters[i]->GetMembers()){
+                outfile << j.first <<" ";
+            }
+            outfile<<" }"<<endl;
+        }
+    }
+    outfile<<endl<<endl<<endl;
+
+}*/

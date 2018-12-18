@@ -109,85 +109,6 @@ vector<string> Util::SplitCommas(string &line) {
 }
 
 
-
-Config_info Util::GetConfiguration(string config_file) {
-    std::ifstream config(config_file);
-    if(!config.good()){
-        cout<< "Invalid Configuation file!"<<endl;
-        exit(0);
-    }
-    string temp;
-    vector<string> wordVector;
-    Config_info info ;
-
-    temp = safe_getline(config); // get the first line
-    wordVector = SplitBlanks(temp);    // split it to a vector (easier access to words)
-    if(wordVector.size() == 2 && !wordVector[1].empty()){ // if it has 2 words k is the second (space separated)
-        info.k = safe_atoi(wordVector[1]);
-    }
-    else if(wordVector.size() == 1){ // if it has 1 word then error (no default k)
-        cout << "Error! Please give k to configuration file "<<endl;
-        exit(0);
-    }
-    else{
-        cout << "Unknown error when reading configuration file"<<endl;
-        exit(0);
-    }
-
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size()==2 && !wordVector[1].empty()) {
-        info.lsh_k = safe_atoi(wordVector[1]);
-    }
-    else if(wordVector.size() == 1 || wordVector[1].empty()){ // if 1 word in line, take default num of hashfunctions
-        info.lsh_k = 4;
-    }
-    else{
-        cout << "Unknown error when reading configuration file"<<endl;
-        exit(0);
-    }
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size() == 2 && !wordVector[1].empty()) {
-        info.lsh_L = safe_atoi(wordVector[1]);
-    }
-    else if(wordVector.size() == 1 || wordVector[1].empty()) { // if 1 word in line, take default num of hash tables
-        info.lsh_L = 5;
-    }
-    else{
-        cout << "Unknown error when reading configuration file"<<endl;
-        exit(0);
-    }
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size() == 2 && !wordVector[1].empty()) {
-        info.w = safe_atoi(wordVector[1]);
-    }
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size() == 2 && !wordVector[1].empty()) {
-        info.cube_k = safe_atoi(wordVector[1]);
-    }
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size() == 2 && !wordVector[1].empty()) {
-        info.cube_M = safe_atoi(wordVector[1]);
-    }
-
-    temp = safe_getline(config);
-    wordVector = SplitBlanks(temp);
-    if(wordVector.size() == 2 && !wordVector[1].empty()) {
-        info.cube_probes = safe_atoi(wordVector[1]);
-    }
-
-    return info;
-}
-
 int Util::safe_atoi(string input) {
     try {
         return stoi(input);
@@ -216,49 +137,47 @@ vector<int> Util::GetUserChoise() {
     Choises[0] = 0;
     Choises[1] = 0;
     Choises[2] = 0;
-    char choise;
     int a;
-    cout << "Do you wish to set a specific set of algorithms to use? (Y/N)" << endl;
-    cin >> choise;
-    if( choise == 'Y'){
-        cout << "Initialization" << endl;
-        cout << "   1. Random selection of k points" << endl;
-        cout << "   2. K-means++"<<endl;
-        cin >> a;
-        if( a == 1 || a ==2){
-            Choises[0] = a;
-        }
-        else{
-            cout << "Invalid value!" <<endl;
-            exit(0);
-        }
 
-        cout << "Assignment" << endl;
-        cout << "   1. Lloyd's Assignment" << endl;
-        cout << "   2. Assignment by Range search with LSH"<<endl;
-        cout << "   3. Assignment by Range search with Hypercube"<<endl;
-        cin >> a;
-        if( a == 1 || a ==2 ||  a == 3){
-            Choises[1] = a;
-        }
-        else{
-            cout << "Invalid value!" <<endl;
-            exit(0);
-        }
+    cout << "Please set the algorithm for clustering" << endl<<endl;
 
-
-        cout << "Update " << endl;
-        cout << "   1. K-means" << endl;
-        cout << "   2. Partitioning Around Medoids"<<endl;
-        cin >> a;
-        if( a == 1 || a ==2 ){
-            Choises[2] = a;
-        }
-        else{
-            cout << "Invalid value!" <<endl;
-            exit(0);
-        }
+    cout << "Initialization" << endl;
+    cout << "   1. Random selection of k points" << endl;
+    cout << "   2. K-means++"<<endl;
+    cin >> a;
+    if( a == 1 || a ==2){
+        Choises[0] = a;
     }
+    else{
+        cout << "Invalid value!" <<endl;
+        exit(0);
+    }
+
+    cout << "Assignment" << endl;
+    cout << "   1. Lloyd's Assignment" << endl;
+    cout << "   2. Assignment by Range search with LSH"<<endl;
+    cin >> a;
+    if( a == 1 || a ==2 ||  a == 3){
+        Choises[1] = a;
+    }
+    else{
+        cout << "Invalid value!" <<endl;
+        exit(0);
+    }
+
+
+    cout << "Update " << endl;
+    cout << "   1. K-means" << endl;
+    cout << "   2. Partitioning Around Medoids"<<endl;
+    cin >> a;
+    if( a == 1 || a ==2 ){
+        Choises[2] = a;
+    }
+    else{
+        cout << "Invalid value!" <<endl;
+        exit(0);
+    }
+
     vector<int>ret;
     for(int i=0;i<3;i++){
         ret.push_back(Choises[i]);

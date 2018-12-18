@@ -2,7 +2,7 @@
 // Created by vassilis on 10/11/2018.
 //
 
-#include "../header/recommendation.h"
+#include "../header/Cluster.h"
 #include "../header/Util.h"
 
 Cluster::Cluster() {
