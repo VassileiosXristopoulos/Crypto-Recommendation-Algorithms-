@@ -2,7 +2,7 @@
 // Created by vassilis on 13/11/2018.
 //
 
-#include "../header/rangeSearch_consts.h"
+#include "../header/clustering/rangeSearch_consts.h"
 
 namespace rangeSearch_consts{
     int L = -1;

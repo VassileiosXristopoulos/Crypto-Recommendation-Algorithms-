@@ -1,0 +1,16 @@
+//
+// Created by vassilis on 19/12/2018.
+//
+
+#ifndef RECOMMENDATION_TWITTERUSERFACTORY_H
+#define RECOMMENDATION_TWITTERUSERFACTORY_H
+
+
+
+class TwitterUserFactory {
+
+};
+
+
+
+#endif //RECOMMENDATION_TWITTERUSERFACTORY_H

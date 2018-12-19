@@ -4,7 +4,7 @@
 // Created by vassilis on 10/11/2018.
 //
 
-#include "../header/ClusterMaster.h"
+#include "../header/clustering/ClusterMaster.h"
 #include "../header/Util.h"
 #include "../header/Consts.h"
 #include <ctime>
