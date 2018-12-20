@@ -13,7 +13,7 @@
 
 map<string,float>Util::Lexicon;
 vector<Coin*>Util::CoinMap;
-int Util::amountOfCoins;
+unsigned long Util::amountOfCoins;
 
 
 int Util::my_mod(int x, int y) {
@@ -238,9 +238,8 @@ void Util::SetupCoinMap() {
             cout << "Coin given from file not valid"<<endl;
             exit(0);
         }
-        CoinMap.push_back(new Coin(CoinNames));
+        CoinMap.push_back(new Coin(CoinNames,(int)amountOfCoins++));
     }
-    amountOfCoins = (int) CoinMap.size();
 }
 
 

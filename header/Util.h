@@ -31,7 +31,7 @@ public:
 
     static vector<Coin*>CoinMap;
 
-    static int amountOfCoins;
+    static unsigned long amountOfCoins;
 
     static void Initialize();
 

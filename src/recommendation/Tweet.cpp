@@ -41,3 +41,11 @@ void Tweet::calculateScore() {
 string Tweet::GetTweetId() {
     return this->tweet_id;
 }
+
+vector<Coin *> Tweet::GetAssociatedCoins() {
+    return associatedCoins;
+}
+
+double Tweet::GetScrore() {
+    return score;
+}

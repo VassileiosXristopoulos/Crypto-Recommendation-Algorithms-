@@ -14,9 +14,11 @@ using namespace std;
 class Coin {
 private:
     vector<string>names;
+    int index;
 public:
-    Coin(vector<string>);
+    Coin(vector<string>, int);
     bool isCoin(string);
+    int GetCoinIndex();
 };
 
 

@@ -6,14 +6,15 @@
 #define RECOMMENDATION_USER_H
 
 
+#include <limits>
 #include "Tweet.h"
 #include "../Util.h"
-
+#define INFINITY std::numeric_limits<double>::infinity()
 class User {
 private:
     string user_id;
     vector<Tweet*> tweets;
-    vector<double> sentiment = vector<double>(Util::amountOfCoins,0);
+    vector<double> sentiment = vector<double>(Util::amountOfCoins, INFINITY);
 public:
     User(string);
     void addTweet(Tweet *);

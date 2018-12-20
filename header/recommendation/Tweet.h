@@ -23,6 +23,8 @@ private:
 public:
     explicit Tweet(vector<string>&);
     string GetTweetId();
+    vector<Coin*> GetAssociatedCoins();
+    double GetScrore();
 };
 
 

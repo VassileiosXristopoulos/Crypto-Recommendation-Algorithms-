@@ -33,6 +33,9 @@ void TwitterUserFactory::ConstructPersonUsers(string inputFile) {
 
         allTweets.push_back(tweet);
     }
+    for(auto const user : PersonUsers){ // finally, compute sentiment vector for each user
+        user->ComputeSentiments();
+    }
 }
 
 void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
@@ -47,6 +50,9 @@ void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
                 }
             }
         }
+    }
+    for (auto const user : RepresentativeUsers){
+        user->ComputeSentiments();
     }
 }
 
