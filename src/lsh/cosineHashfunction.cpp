@@ -5,7 +5,7 @@
 #include <random>
 #include "../../header/lsh/cosineHashfunction.h"
 #include "../../header/lsh/lsh.h"
-#include "../../header/rangeSearch_consts.h"
+#include "../../header/clustering/rangeSearch_consts.h"
 
 extern default_random_engine generator;
 extern normal_distribution<float> distribution;

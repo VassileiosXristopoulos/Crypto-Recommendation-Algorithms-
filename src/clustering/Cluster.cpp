@@ -2,8 +2,8 @@
 // Created by vassilis on 10/11/2018.
 //
 
-#include "../header/clustering/Cluster.h"
-#include "../header/Util.h"
+#include "../../header/clustering/Cluster.h"
+#include "../../header/Util.h"
 
 Cluster::Cluster() {
     Centroid = nullptr;

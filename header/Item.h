@@ -9,7 +9,7 @@
 #include <string>
 #include <vector>
 
-#include "rangeSearch_consts.h"
+#include "clustering/rangeSearch_consts.h"
 
 using namespace std;
 

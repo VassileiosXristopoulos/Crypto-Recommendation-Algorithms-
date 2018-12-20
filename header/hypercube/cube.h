@@ -7,7 +7,7 @@
 
 
 #include "AHypercube.h"
-#include "../DataSetMap.h"
+#include "../clustering/DataSetMap.h"
 
 class cube {
 private:

@@ -8,6 +8,13 @@
 #include <regex>
 #include <fstream>
 #include "../header/Util.h"
+#include "../header/Consts.h"
+#include "../header/recommendation/Tweet.h"
+
+map<string,float>Util::Lexicon;
+vector<Coin*>Util::CoinMap;
+int Util::amountOfCoins;
+
 
 int Util::my_mod(int x, int y) {
     return (x % y + y) % y;
@@ -108,6 +115,21 @@ vector<string> Util::SplitCommas(string &line) {
     return element;
 }
 
+vector<string> Util::SplitTabs(string &line) {
+    vector<string> element;
+    size_t pos = line.find('\t');
+    size_t startPos = 0;
+    while (pos != string::npos) {
+        element.push_back(line.substr(startPos, pos - startPos));
+        startPos = pos + 1;
+        pos = line.find('\t', startPos);
+    }
+    element.push_back(line.substr(startPos, pos - startPos));
+
+    return element;
+}
+
+
 
 int Util::safe_atoi(string input) {
     try {
@@ -185,6 +207,44 @@ vector<int> Util::GetUserChoise() {
     delete[] Choises;
     return ret;
 }
+
+void Util::Initialize() {
+    SetupLexicon();
+    SetupCoinMap();
+}
+
+void Util::SetupLexicon() {
+    string FileLine;
+    ifstream file(Consts::lexiconFile);
+
+    while(getline( file, FileLine )) {
+        vector<string> lexiconContent = Util::SplitTabs(FileLine);
+        if(lexiconContent.size() != 2){
+            cout << "Lexicon not valid"<<endl;
+            exit(0);
+        }
+        Util::Lexicon.insert(pair<string,float>(lexiconContent[0],stof(lexiconContent[1])));
+    }
+}
+
+void Util::SetupCoinMap() {
+    string FileLine;
+    ifstream file(Consts::coinFile);
+
+    while(getline( file, FileLine )) {
+        FileLine = FileLine.substr(0, FileLine.size() - 1);
+        vector<string> CoinNames = Util::SplitTabs(FileLine);
+        if(CoinNames.empty()){
+            cout << "Coin given from file not valid"<<endl;
+            exit(0);
+        }
+        CoinMap.push_back(new Coin(CoinNames));
+    }
+    amountOfCoins = (int) CoinMap.size();
+}
+
+
+
 
 
 

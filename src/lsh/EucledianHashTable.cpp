@@ -12,7 +12,7 @@
 #include "../../header/lsh/HashNode.h"
 #include "../../header/Util.h"
 #include "../../header/lsh/lsh.h"
-#include "../../header/rangeSearch_consts.h"
+#include "../../header/clustering/rangeSearch_consts.h"
 
 using namespace std;
 

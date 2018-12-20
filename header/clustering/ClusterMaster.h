@@ -10,11 +10,11 @@
 #include <fstream>
 #include "DataSetMap.h"
 #include "Cluster.h"
-#include "lsh/AHashTable.h"
-#include "hypercube/AHypercube.h"
-#include "Util.h"
-#include "lsh/lsh.h"
-#include "hypercube/cube.h"
+#include "../lsh/AHashTable.h"
+#include "../hypercube/AHypercube.h"
+#include "../Util.h"
+#include "../lsh/lsh.h"
+#include "../hypercube/cube.h"
 
 class ClusterMaster {
 private:

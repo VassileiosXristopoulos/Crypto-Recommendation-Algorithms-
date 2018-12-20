@@ -11,14 +11,15 @@
 #include <vector>
 #include <algorithm>
 #include <iomanip>
-#include "../header/DataSetMap.h"
-#include "../header/ClusterMaster.h"
+#include "../header/clustering/DataSetMap.h"
+#include "../header/clustering/ClusterMaster.h"
 #include "../header/Util.h"
+#include "../header/recommendation/TwitterUserFactory.h"
 
 int k=0;
 int main(int argv, char*argc[]){
 
-// TODO: add check for input parameters
+    // TODO: add check for input parameters
     string input_file = argc[2];
     string output_file = argc[4];
 
@@ -29,7 +30,10 @@ int main(int argv, char*argc[]){
     Clustermaster->Clustering();
 
     vector<Cluster*>clusters = Clustermaster->GetClusters();
-   // here I can get my representatives and/or start Project3 implementation
+
+    Util::Initialize();
+
+    TwitterUserFactory * twitterUserFactory = new TwitterUserFactory(input_file,clusters);
 
 
     delete (Clustermaster);

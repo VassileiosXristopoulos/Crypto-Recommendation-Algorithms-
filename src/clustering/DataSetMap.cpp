@@ -6,10 +6,10 @@
 #include <fstream>
 #include <cmath>
 #include <algorithm>
-#include "../header/clustering/DataSetMap.h"
-#include "../header/Util.h"
-#include "../header/lsh/lsh.h"
-#include "../header/clustering/rangeSearch_consts.h"
+#include "../../header/clustering/DataSetMap.h"
+#include "../../header/Util.h"
+#include "../../header/lsh/lsh.h"
+#include "../../header/clustering/rangeSearch_consts.h"
 
 int n;
 

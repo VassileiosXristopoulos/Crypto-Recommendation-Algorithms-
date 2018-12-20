@@ -7,6 +7,8 @@
 
 
 #include "Item.h"
+#include "recommendation/Coin.h"
+#include <map>
 
 struct Config_info{
     int k;
@@ -21,7 +23,18 @@ struct Config_info{
 
 
 class Util {
+private:
+    static void SetupLexicon();
+    static void SetupCoinMap();
 public:
+    static map<string,float>Lexicon;
+
+    static vector<Coin*>CoinMap;
+
+    static int amountOfCoins;
+
+    static void Initialize();
+
     static int my_mod(int x, int y);
 
     static double EucledianDistance(vector<double> x, vector<double> y);
@@ -37,6 +50,7 @@ public:
     static double cosineDistance(vector<double>&x,vector<double>&y);
     static vector<string> SplitBlanks(string &line);
     static vector<string> SplitCommas(string &line);
+    static vector<string> SplitTabs(string &line);
     static Config_info GetConfiguration(string);
     static int safe_atoi(string);
     static string safe_getline(std::ifstream&);

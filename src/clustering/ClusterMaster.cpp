@@ -4,9 +4,9 @@
 // Created by vassilis on 10/11/2018.
 //
 
-#include "../header/clustering/ClusterMaster.h"
-#include "../header/Util.h"
-#include "../header/Consts.h"
+#include "../../header/clustering/ClusterMaster.h"
+#include "../../header/Util.h"
+#include "../../header/Consts.h"
 #include <ctime>
 #include <random>
 #include <fstream>
@@ -550,7 +550,7 @@ vector<double> ClusterMaster::Silhouette() {
 }
 
 void ClusterMaster::SetupParameters() {
-    this->config_info.k = 10;
+    this->config_info.k = 3;
     this->config_info.lsh_k = 500;
     this->config_info.lsh_L = 5;
     this->config_info.w = 400;
