@@ -56,7 +56,7 @@ int EucledianHashTable::hash(Item *item) {
 
 
 
-vector< Item* > EucledianHashTable::findNcloserNeighbors(Item *item,double r){
+vector< Item* > EucledianHashTable::findCloserNeighbors(Item *item,double r){
     int bucket = hash(item);
     vector<int>*item_gVector=computeGVector(item);
     item->setGVector(*item_gVector);
@@ -112,6 +112,9 @@ int EucledianHashTable::size() {
         }
     }
     return size;
+}
+
+vector<Item *> EucledianHashTable::findNCloserNeighboors(Item *item, int n) {
 }
 
 

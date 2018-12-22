@@ -22,6 +22,7 @@ private:
 public:
     Item(string);
     Item(vector<string>&element);
+    Item(string,vector<double>&element);
     ~Item();
     vector<double>& getContent();
     void SetContent(vector<double>&);

@@ -8,7 +8,7 @@
 
 #include "AHashTable.h"
 #include "../clustering/DataSetMap.h"
-
+#include "../recommendation/User.h"
 
 
 class lsh {
@@ -17,8 +17,11 @@ private:
 
 public:
     lsh(int k,int L,int w,string& metric,DataSetMap *set);
+    lsh(int k,int L,int w,vector<User *>set);
     ~lsh();
     vector<Item*> FindItemsInRange(Item * item, double r);
+    vector<vector<double>> FindNCloserNeighboors(User *);
+    //vector<vector<double>>
 };
 
 

@@ -19,7 +19,8 @@ public:
     vector<int>* computeGVector(Item* item) override;
     int hash(Item*item) override;
     void add(Item* item) override;
-    vector<Item*>  findNcloserNeighbors(Item *item,double r) override;
+    vector<Item*>  findCloserNeighbors(Item *item,double r) override;
+    vector<Item*> findNCloserNeighboors(Item* item, int n) override;
     int size() override;
 };
 

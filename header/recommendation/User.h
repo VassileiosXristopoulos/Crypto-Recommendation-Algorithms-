@@ -7,9 +7,10 @@
 
 
 #include <limits>
+#include <cmath>
 #include "Tweet.h"
 #include "../Util.h"
-#define INFINITY std::numeric_limits<double>::infinity()
+//#define INFINITY std::numeric_limits<double>::infinity()
 class User {
 private:
     string user_id;
@@ -20,6 +21,7 @@ public:
     void addTweet(Tweet *);
     string GetUserId();
     void ComputeSentiments();
+    vector<double>& GetSentimentVector();
 };
 
 

@@ -23,12 +23,18 @@ Item::Item(vector<string> &element){
 }
 
 
+Item::Item(string name, vector<double> &elements) {
+    this->name = name;
+    this->content = elements;
+}
+
 vector<double> &Item::getContent() {
     return content;
 }
 string Item::getName(){
     return name;
 }
+
 void Item::setGVector(vector<int>& h_i) {
     g_vector.clear();
     for(unsigned int i=0;i<h_i.size(); i++){
@@ -36,14 +42,14 @@ void Item::setGVector(vector<int>& h_i) {
     }
 }
 
-Item::~Item() {}
 
+
+Item::~Item() {}
 
 
 vector<int>& Item::getGVector() {
     return g_vector;
 }
-
 
 int Item::size() {
     int size=(int)name.size();

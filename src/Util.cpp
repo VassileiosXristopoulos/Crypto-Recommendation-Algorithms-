@@ -242,6 +242,11 @@ void Util::SetupCoinMap() {
     }
 }
 
+double Util::cosineSimilarity(vector<double> &x, vector<double> &y) {
+    // cosineDistance returns 1-a
+    return (-1)*(cosineDistance(x,y))+1; // I return (1-a)(-1) + 1 = a-1+1 = a
+}
+
 
 
 

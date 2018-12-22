@@ -50,5 +50,8 @@ void User::ComputeSentiments() {
             i = 0;
         }
     }
-    cout << "Normalization completed"<<endl;
+}
+
+vector<double>& User::GetSentimentVector() {
+    return this->sentiment;
 }

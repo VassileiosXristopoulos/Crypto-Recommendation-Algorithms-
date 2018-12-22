@@ -34,7 +34,7 @@ void CosineHashTable::add(Item *item) {
     Table[key].push_back(new HashNode(item,computeGVector(item)));
 }
 
-vector<Item*>  CosineHashTable::findNcloserNeighbors(Item *item,double r) {
+vector<Item*>  CosineHashTable::findCloserNeighbors(Item *item,double r) {
     int bucket = hash(item);
 
     vector <Item*> ret;
@@ -56,6 +56,30 @@ vector<Item*>  CosineHashTable::findNcloserNeighbors(Item *item,double r) {
     return ret;
 }
 
+
+vector<Item *> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
+    int bucket = hash(item);
+
+    vector <Item*> ret;
+    for(unsigned int i=0; i<Table[bucket].size(); i++) { //compute distance within all items of the same bucket
+        // because hashfunction returns bitset, so all g(i)'s are the
+        // same
+
+        Item * datasetItem = Table[bucket][i]->getItem();
+        double distance = Util::cosineDistance(item->getContent(), datasetItem->getContent());
+
+        if (item->getName().compare(datasetItem->getName()) != 0) {
+            ret.push_back(datasetItem);
+        }
+    }
+    // sort and get the 20-50 closer
+    std::sort(ret.begin(), ret.end(),
+              [](Item* a, Item* b) {
+                  return Util::cosineDistance(a->getContent(), b->getContent());
+              });
+    ret.erase(unique(ret.begin(), ret.end()), ret.end());
+    return vector<Item*>(ret.begin(),ret.begin() + n);
+}
 
 CosineHashTable::~CosineHashTable()  {
     for(unsigned int i=0;i<Table.size();i++){

@@ -48,6 +48,7 @@ public:
     static void getHammingCloseVectors( int changesLeft, std::vector<int>& str, const int i,
             vector<vector<int>>&res );
     static double cosineDistance(vector<double>&x,vector<double>&y);
+    static double cosineSimilarity(vector<double>&x,vector<double>&y);
     static vector<string> SplitBlanks(string &line);
     static vector<string> SplitCommas(string &line);
     static vector<string> SplitTabs(string &line);

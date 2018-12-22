@@ -18,9 +18,10 @@ public:
     virtual ~AHashTable();
     virtual void add(Item* item) = 0;
     virtual int hash(Item*item) = 0;
-    virtual vector<Item*>  findNcloserNeighbors(Item *item,double r) = 0;
+    virtual vector<Item*>  findCloserNeighbors(Item *item,double r) = 0;
     virtual vector<int>* computeGVector(Item* item) = 0;
     virtual int size() = 0;
+    virtual vector<Item*> findNCloserNeighboors(Item* item, int n) = 0;
 };
 
 

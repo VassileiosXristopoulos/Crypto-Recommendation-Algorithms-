@@ -12,5 +12,5 @@ public:
     static constexpr const char* metric = "cosine";
     static constexpr const char* lexiconFile = "../Input/vader_lexicon.csv";
     static constexpr const char* coinFile = "../Input/coins_queries.csv";
-
+    static constexpr int amountOfNeighboors = 3;
 };

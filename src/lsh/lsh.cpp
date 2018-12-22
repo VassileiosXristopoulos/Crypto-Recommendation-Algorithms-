@@ -8,6 +8,7 @@
 #include "../../header/lsh/CosineHashTable.h"
 #include "../../header/Util.h"
 #include "../../header/clustering/rangeSearch_consts.h"
+#include "../../header/Consts.h"
 
 lsh::lsh(int k, int L, int w, string& metric,DataSetMap *set) {
 
@@ -30,6 +31,19 @@ lsh::lsh(int k, int L, int w, string& metric,DataSetMap *set) {
 
 }
 
+lsh::lsh(int k, int L, int w, vector<User *>set) {
+    rangeSearch_consts::L = L;
+    rangeSearch_consts::k = k;
+    rangeSearch_consts::w = w;
+    rangeSearch_consts::d = (int)set[0]->GetSentimentVector().size();
+    for (int i = 0; i < L; i++) { //construct the L HashTables
+        this->LshHashTables.push_back(new CosineHashTable((int)set.size() / 2, k));
+        for (auto const & j: set) { // TODO : check this. All users are duplicates
+            LshHashTables[i]->add(new Item(j->GetUserId(),j->GetSentimentVector()));
+        }
+    }
+}
+
 vector<Item*> lsh::FindItemsInRange(Item * centroid, double r) {
     vector<Item*> closerNneighboors=vector<Item*>();
     if(rangeSearch_consts::L == -1){
@@ -37,7 +51,7 @@ vector<Item*> lsh::FindItemsInRange(Item * centroid, double r) {
         exit(0);
     }
     for (int i = 0; i < rangeSearch_consts::L; i++) { //for each hashtable
-        vector<Item*> Nneighboors = this->LshHashTables[i]->findNcloserNeighbors(centroid,r);
+        vector<Item*> Nneighboors = this->LshHashTables[i]->findCloserNeighbors(centroid,r);
 
         for(unsigned int j=0; j<Nneighboors.size(); j++){
             if(Nneighboors[j]->GetCluster() != centroid->GetCluster()){ // return only those NOT already in the cluster
@@ -53,6 +67,36 @@ vector<Item*> lsh::FindItemsInRange(Item * centroid, double r) {
                 .end());
     }
     return closerNneighboors;
+}
+
+vector<vector<double>> lsh::FindNCloserNeighboors(User * user) {
+    vector<vector<double>> closerNneighboors=vector<vector<double>>();
+    if(rangeSearch_consts::L == -1){
+        cout <<"Cannot perform LSH" <<endl;
+        exit(0);
+    }
+
+    for (int i = 0; i < rangeSearch_consts::L; i++) { //for each hashtable
+        vector<Item*> Nneighboors = this->LshHashTables[i]->findNCloserNeighboors(new Item(user->GetUserId(),user->GetSentimentVector()),
+                Consts::amountOfNeighboors);
+
+        for(unsigned int j=0; j<Nneighboors.size(); j++){
+            if(Nneighboors[j]->getName() != user->GetUserId()){ // return it if not same user
+                closerNneighboors.push_back(Nneighboors[j]->getContent());
+            }
+
+        }
+
+    }
+    // TODO: check if "User *user" in lamda is the correct user
+    // sort and get the 20-50 closer
+    std::sort(closerNneighboors.begin(), closerNneighboors.end(),
+              [](std::vector<double> a, std::vector<double> b) {
+                  return Util::cosineDistance(a,b);
+              });
+    closerNneighboors.erase(unique(closerNneighboors.begin(), closerNneighboors.end()), closerNneighboors
+            .end());
+    return vector<vector<double>>(closerNneighboors.begin(),closerNneighboors.begin() + Consts::amountOfNeighboors);
 }
 
 lsh::~lsh() {

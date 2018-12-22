@@ -35,6 +35,9 @@ int main(int argv, char*argc[]){
 
     TwitterUserFactory * twitterUserFactory = new TwitterUserFactory(input_file,clusters);
 
+    lsh *lsh_factory = new lsh(Clustermaster->config_info.lsh_k, Clustermaster->config_info.lsh_L,
+                               Clustermaster->config_info.w,twitterUserFactory->GetPersonUsers());
+    lsh_factory->FindNCloserNeighboors(twitterUserFactory->GetPersonUsers()[0]);
 
     delete (Clustermaster);
 }
