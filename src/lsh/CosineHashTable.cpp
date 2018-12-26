@@ -57,10 +57,12 @@ vector<Item*>  CosineHashTable::findCloserNeighbors(Item *item,double r) {
 }
 
 
-vector<Item *> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
+vector<Item*> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
     int bucket = hash(item);
 
-    vector <Item*> ret;
+    vector <HashNode*> ret;
+    ret = Table[bucket];
+    map<double,Item*>Map;
     for(unsigned int i=0; i<Table[bucket].size(); i++) { //compute distance within all items of the same bucket
         // because hashfunction returns bitset, so all g(i)'s are the
         // same
@@ -69,22 +71,41 @@ vector<Item *> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
         double distance = Util::cosineDistance(item->getContent(), datasetItem->getContent());
 
         if (item->getName().compare(datasetItem->getName()) != 0) {
-            ret.push_back(datasetItem);
+            Map.insert(make_pair(distance,item));
         }
     }
-    // sort and get the 20-50 closer
+
+
+
+    /*// sort and get the 20-50 closer
     std::sort(ret.begin(), ret.end(),
-              [](Item* a, Item* b) {
-                  return Util::cosineDistance(a->getContent(), b->getContent());
-              });
-    ret.erase(unique(ret.begin(), ret.end()), ret.end());
-    return vector<Item*>(ret.begin(),ret.begin() + n);
+              [&](HashNode* a, HashNode* b) ->bool{
+                  return Util::cosineDistance(a->getItem()->getContent(), item->getContent()) < Util::cosineDistance
+                  (b->getItem()->getContent(), item->getContent());
+              });*/
+    //ret.erase(unique(ret.begin(), ret.end()), ret.end());
+    vector<Item*> returnVector;
+
+    if(Map.size()>=n){ // get first (ordered) n elements
+        int i =0;
+        for(auto const& elem : Map) {
+            returnVector.push_back(elem.second);
+            if(++i == n)
+                break;
+        }
+    }
+    else{
+        for(auto const& elem: Map) {
+            returnVector.push_back(elem.second);
+        }
+    }
+    return returnVector;
 }
 
 CosineHashTable::~CosineHashTable()  {
     for(unsigned int i=0;i<Table.size();i++){
         for(unsigned int j=0;j<Table[i].size();j++){
-            delete(Table[i][j]);
+            delete( Table[i][j]);
         }
     }
     for(int i = 0; i<k; i++){
@@ -104,4 +125,5 @@ int CosineHashTable::size() {
     }
     return size;
 }
+
 

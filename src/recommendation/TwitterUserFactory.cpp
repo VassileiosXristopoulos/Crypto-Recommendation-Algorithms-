@@ -33,9 +33,18 @@ void TwitterUserFactory::ConstructPersonUsers(string inputFile) {
 
         allTweets.push_back(tweet);
     }
-    for(auto const user : PersonUsers){ // finally, compute sentiment vector for each user
-        user->ComputeSentiments();
+    for(int i=0;i<PersonUsers.size();i++){ // finally, compute sentiment vector for each user
+        PersonUsers[i]->ComputeSentiments();
+        if(PersonUsers[i]->AllZero()){
+          //  PersonUsers.erase(find(PersonUsers.begin(),PersonUsers.end(),user));
+          delete(PersonUsers[i]);
+          PersonUsers[i] = nullptr;
+        }
     }
+    PersonUsers.erase(remove_if(PersonUsers.begin(),PersonUsers.end(),[&](User * user)->bool{
+        return user == nullptr;
+    }), PersonUsers.end());
+
 }
 
 void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
@@ -51,9 +60,17 @@ void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
             }
         }
     }
-    for (auto const user : RepresentativeUsers){
-        user->ComputeSentiments();
+    for(int i=0;i<RepresentativeUsers.size();i++){ // finally, compute sentiment vector for each user
+        RepresentativeUsers[i]->ComputeSentiments();
+        if(RepresentativeUsers[i]->AllZero()){
+            //  PersonUsers.erase(find(PersonUsers.begin(),PersonUsers.end(),user));
+            delete(RepresentativeUsers[i]);
+            RepresentativeUsers[i] = nullptr;
+        }
     }
+    RepresentativeUsers.erase(remove_if(RepresentativeUsers.begin(),RepresentativeUsers.end(),[&](User * user)->bool{
+        return user == nullptr;
+    }), RepresentativeUsers.end());
 }
 
 void TwitterUserFactory::AddTweetToPersonUser(string user, Tweet * tweet) {
@@ -96,11 +113,11 @@ int TwitterUserFactory::getClusterIndex() {
     return cluster_index++;
 }
 
-vector<User *> TwitterUserFactory::GetPersonUsers() {
+vector<User *>& TwitterUserFactory::GetPersonUsers() {
     return PersonUsers;
 }
 
-vector<User *> TwitterUserFactory::GetRepresentatives() {
+vector<User *>& TwitterUserFactory::GetRepresentatives() {
     return RepresentativeUsers;
 }
 

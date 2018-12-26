@@ -55,6 +55,48 @@ ClusterMaster::ClusterMaster(vector<int> V) {
 
 
 
+ClusterMaster::ClusterMaster(vector<int>V, vector<User *>&set) {
+
+    this->Dataset = new DataSetMap();
+    for(auto const& user : set){
+        Item* item = new Item(user->GetUserId(),user->GetSentimentVector());
+        item->SetCluster(-1);
+        this->Dataset->append(item);
+    }
+
+    SetupPredictionParameters(); // TODO: check if parameters are realistic for recommendation clustering
+
+    this->metric = Consts::metric;
+
+    this->Clusters = vector<Cluster*>((unsigned long)config_info.k);
+    for(int i=0;i<config_info.k;i++){
+        Clusters[i] = new Cluster();
+    }
+
+
+
+    for(int i=0;i<3;i++){
+        Choises.push_back(V[i]);
+    }
+
+    lsh_master= nullptr;
+    hypercube_master= nullptr;
+
+    switch (Choises[1]){
+        case 2:
+            lsh_master = new lsh(config_info.lsh_k,config_info.lsh_L,config_info.w, metric,this->Dataset);
+            break;
+        case 3:
+            hypercube_master = new cube(config_info.cube_k,config_info.w,config_info.cube_probes,config_info.cube_M,metric,
+                                        this->Dataset);
+            break;
+        default:
+            break;
+    }
+}
+
+
+
 /**
  * Destructor
  */
@@ -69,7 +111,6 @@ ClusterMaster::~ClusterMaster() {
         delete i;
     outfile.close();
 }
-
 
 
 /**
@@ -93,7 +134,6 @@ void ClusterMaster::Initialization() {
    }
 }
 
-
 /**
  * Initialize centers
  * Random selection (simple)
@@ -102,12 +142,17 @@ void ClusterMaster::RandomSelection() {
     srand(time(0));
     for(unsigned int i=0; i<Clusters.size(); i++){
         // select a random Item from Map for each Cluster's centroid
-        Item * item = Dataset->at(rand() % Dataset->size());
+        Item * item;
+        do{
+            item = Dataset->at(rand() % Dataset->size());
+        }while(item->GetCluster()>0);
+
         item->SetCluster(i);
         Clusters[i]->SetCentroid(item);
         item->SetCluster(i);
     }
 }
+
 
 /**
  * Initialize centers
@@ -199,6 +244,8 @@ void ClusterMaster::kmeanspp() {
 }
 
 
+
+
 /**
  * Assign each point to new Cluster
  * Lloyd's assignement
@@ -232,7 +279,10 @@ void ClusterMaster::LloydsAssignment() {
 
         // if the item is not already in it's closest cluster
         if(!Clusters[closerCluster]->Contains(dataSetItem->getName())){
-            if(dataSetItem->GetCluster() > 0 ){ // if item is in some cluster (i.e. we are not in 1st step)
+            if(dataSetItem->GetCluster() > 0){ // if item is in some cluster
+                // (i.e. we
+                // are not in 1st
+                // step)
                 // delete the item from it's previous cluster
                 Clusters[dataSetItem->GetCluster()]->DeleteMember(dataSetItem->getName());
             }
@@ -270,7 +320,6 @@ void ClusterMaster::Assignement() {
 
 
 
-
 /**
  * Perform clustering
  */
@@ -282,8 +331,6 @@ void ClusterMaster::Clustering() {
     }
 }
 
-
-
 /**
  * Update centers of each Cluster
  */
@@ -294,6 +341,8 @@ void ClusterMaster::Update() {
     }
     notFinished = !noChanges;
 }
+
+
 
 void ClusterMaster::SetNextChoise() {
     if(Choises[0]==1 && Choises[1] == 1 && Choises[2] == 1){ // [1,1,1]
@@ -364,8 +413,6 @@ void ClusterMaster::SetNextChoise() {
 
 }
 
-
-
 /**
  * For repeating case
  * Reset all clusters
@@ -379,6 +426,8 @@ void ClusterMaster::ResetDataset() {
         Dataset->at(i)->SetCluster(-1); // set -1 to "belongs to cluster" field of each item
     }
 }
+
+
 
 void ClusterMaster::RangeSearchAssignment(string& method) {
 
@@ -456,8 +505,6 @@ void ClusterMaster::RangeSearchAssignment(string& method) {
     delete (nonAssignedItems);
     delete (&method);
 }
-
-
 
 vector<Item *> ClusterMaster::GenericFindinRange(string &method, Item * centroid, double r) {
     if(method == "lsh"){
@@ -550,7 +597,17 @@ vector<double> ClusterMaster::Silhouette() {
 }
 
 void ClusterMaster::SetupParameters() {
-    this->config_info.k = 3;
+    this->config_info.k = 300;
+    this->config_info.lsh_k = 500;
+    this->config_info.lsh_L = 5;
+    this->config_info.w = 400;
+    this->config_info.cube_k = 3;
+    this->config_info.cube_M = 10000;
+    this->config_info.cube_probes = 8;
+}
+
+void ClusterMaster::SetupPredictionParameters() {
+    this->config_info.k = 100;
     this->config_info.lsh_k = 500;
     this->config_info.lsh_L = 5;
     this->config_info.w = 400;
@@ -561,6 +618,24 @@ void ClusterMaster::SetupParameters() {
 
 vector<Cluster *> ClusterMaster::GetClusters() {
     return Clusters;
+}
+
+void ClusterMaster::ComputeVectorizedMembers() {
+    for(auto const & cluster : Clusters){
+        vector<vector<double>> membervec;
+        for(auto const& clusterMember : cluster->GetMembers()){
+            membervec.push_back(clusterMember.second->getContent());
+        }
+        vectorizedClusters.push_back(membervec);
+    }
+}
+
+vector<vector<double>> ClusterMaster::GetVectorizedCluster(Cluster *cluster) {
+    for(int i=0;i<Clusters.size();i++){
+        if(cluster==Clusters[i]){
+            return vectorizedClusters[i];
+        }
+    }
 }
 
 

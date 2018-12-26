@@ -25,6 +25,7 @@ private:
     vector<int>Choises;
     lsh * lsh_master;
     cube* hypercube_master;
+    vector<vector<vector<double>>>vectorizedClusters;
 
     string metric;
     ofstream outfile;
@@ -42,12 +43,16 @@ private:
     //void PrintResults(double);
     vector<double> Silhouette();
     void SetupParameters();
+    void SetupPredictionParameters();
 public:
     Config_info config_info; // TODO: place config info somewhere public
     ClusterMaster(vector<int>);
+    ClusterMaster(vector<int>,vector<User*>&);
     ~ClusterMaster();
     void Clustering();
     vector<Cluster*> GetClusters();
+    void ComputeVectorizedMembers();
+    vector<vector<double>> GetVectorizedCluster(Cluster*);
 
 
 

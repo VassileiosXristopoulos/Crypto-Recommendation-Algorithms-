@@ -8,7 +8,7 @@
 #endif //RECOMMENDATION_CONSTS_H
 class Consts{
 public:
-    static constexpr const char* vectorizedTweetFile = "../Input/twitter_dataset_test.csv";
+    static constexpr const char* vectorizedTweetFile = "../Input/twitter_dataset_small_v2.csv";
     static constexpr const char* metric = "cosine";
     static constexpr const char* lexiconFile = "../Input/vader_lexicon.csv";
     static constexpr const char* coinFile = "../Input/coins_queries.csv";

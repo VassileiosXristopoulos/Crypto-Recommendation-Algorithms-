@@ -15,13 +15,15 @@ class User {
 private:
     string user_id;
     vector<Tweet*> tweets;
+    bool allZero;
     vector<double> sentiment = vector<double>(Util::amountOfCoins, INFINITY);
 public:
     User(string);
     void addTweet(Tweet *);
     string GetUserId();
     void ComputeSentiments();
-    vector<double>& GetSentimentVector();
+    vector<double> GetSentimentVector();
+    bool AllZero();
 };
 
 

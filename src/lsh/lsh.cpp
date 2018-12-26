@@ -77,26 +77,41 @@ vector<vector<double>> lsh::FindNCloserNeighboors(User * user) {
     }
 
     for (int i = 0; i < rangeSearch_consts::L; i++) { //for each hashtable
-        vector<Item*> Nneighboors = this->LshHashTables[i]->findNCloserNeighboors(new Item(user->GetUserId(),user->GetSentimentVector()),
+       /* for (auto const &sent : user->GetSentimentVector()) {
+            if (sent != 0) {
+                cout << "found it" << endl;
+            }
+        }*/
+        vector<Item *> Nneighboors = this->LshHashTables[i]->findNCloserNeighboors(
+                new Item(user->GetUserId(), user->GetSentimentVector()),
                 Consts::amountOfNeighboors);
 
-        for(unsigned int j=0; j<Nneighboors.size(); j++){
-            if(Nneighboors[j]->getName() != user->GetUserId()){ // return it if not same user
+
+        for (unsigned int j = 0; j < Nneighboors.size(); j++) {
+            if (Nneighboors[j]->getName() != user->GetUserId()) { // return it if not same user
                 closerNneighboors.push_back(Nneighboors[j]->getContent());
             }
 
         }
 
+
     }
     // TODO: check if "User *user" in lamda is the correct user
     // sort and get the 20-50 closer
     std::sort(closerNneighboors.begin(), closerNneighboors.end(),
-              [](std::vector<double> a, std::vector<double> b) {
-                  return Util::cosineDistance(a,b);
+              [&](std::vector<double> a, std::vector<double> b) {
+                  return Util::cosineDistance(a,user->GetSentimentVector()) < Util::cosineDistance(b,
+                                                                                                   user->GetSentimentVector());
               });
     closerNneighboors.erase(unique(closerNneighboors.begin(), closerNneighboors.end()), closerNneighboors
             .end());
-    return vector<vector<double>>(closerNneighboors.begin(),closerNneighboors.begin() + Consts::amountOfNeighboors);
+    if(closerNneighboors.size()>= Consts::amountOfNeighboors) {
+        return vector<vector<double>>(closerNneighboors.begin(),
+                                      closerNneighboors.begin() + Consts::amountOfNeighboors);
+    }
+    else{
+        return closerNneighboors;
+    }
 }
 
 lsh::~lsh() {

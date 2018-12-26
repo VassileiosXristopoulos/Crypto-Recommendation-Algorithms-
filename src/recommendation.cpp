@@ -15,6 +15,7 @@
 #include "../header/clustering/ClusterMaster.h"
 #include "../header/Util.h"
 #include "../header/recommendation/TwitterUserFactory.h"
+#include "../header/recommendation/Predictor.h"
 
 int k=0;
 int main(int argv, char*argc[]){
@@ -25,7 +26,7 @@ int main(int argv, char*argc[]){
 
     // TODO : add -validate parameter handling
 
-    vector<int> Choises = Util::GetUserChoise();
+    vector<int> Choises = Util::GetUserChoise("Please set the algorithm for clustering");
     ClusterMaster* Clustermaster = new ClusterMaster(Choises);
     Clustermaster->Clustering();
 
@@ -35,9 +36,14 @@ int main(int argv, char*argc[]){
 
     TwitterUserFactory * twitterUserFactory = new TwitterUserFactory(input_file,clusters);
 
-    lsh *lsh_factory = new lsh(Clustermaster->config_info.lsh_k, Clustermaster->config_info.lsh_L,
-                               Clustermaster->config_info.w,twitterUserFactory->GetPersonUsers());
-    lsh_factory->FindNCloserNeighboors(twitterUserFactory->GetPersonUsers()[0]);
+   /* lsh *lsh_factory = new lsh(Clustermaster->config_info.lsh_k, Clustermaster->config_info.lsh_L,
+                               Clustermaster->config_info.w,twitterUserFactory->GetPersonUsers());*/
+
+    //lsh_factory->FindNCloserNeighboors(twitterUserFactory->GetPersonUsers()[0]);
+
+    auto * predictor = new Predictor(twitterUserFactory->GetPersonUsers(),twitterUserFactory->GetRepresentatives(),
+            Clustermaster->config_info);
+    predictor->PerfromPrediction();
 
     delete (Clustermaster);
 }

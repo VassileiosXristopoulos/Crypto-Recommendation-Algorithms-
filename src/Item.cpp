@@ -10,7 +10,7 @@ Item::Item(string name){
     this->name = name;
     this->cluster = -1;
 }
-Item::Item(vector<string> &element){
+Item::Item(vector<string>& element){
 
     name = element.at(0);
     element.erase(element.begin());
@@ -23,9 +23,10 @@ Item::Item(vector<string> &element){
 }
 
 
-Item::Item(string name, vector<double> &elements) {
+Item::Item(string name, vector<double> elements) {
     this->name = name;
-    this->content = elements;
+    for(auto const & i: elements)
+        content.push_back(i);
 }
 
 vector<double> &Item::getContent() {

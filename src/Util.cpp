@@ -74,7 +74,7 @@ void Util::getHammingCloseVectors( int changesLeft, vector<int>& str, const int 
     getHammingCloseVectors(changesLeft,str, i-1,res);
 }
 
-double Util::cosineDistance(vector<double> &x, vector<double> &y) {
+double Util::cosineDistance(vector<double> x, vector<double> y) {
     double sum=0,partial_sumX=0,partial_sumY=0;
 
     for(unsigned int i=0;i<x.size();i++){
@@ -84,8 +84,13 @@ double Util::cosineDistance(vector<double> &x, vector<double> &y) {
     }
     partial_sumX=sqrt(partial_sumX);
     partial_sumY=sqrt(partial_sumY);
-    return 1 - sum/(partial_sumX*partial_sumY);
+    double dividor =partial_sumX*partial_sumY;
+    if(dividor != 0)
+        return 1 - sum/(dividor);
+
+    return 0;
 }
+
 
 vector<string> Util::SplitBlanks(string &line) { //split a string by spaces and return a vector<string>
     vector<string> element;
@@ -154,7 +159,7 @@ string Util::safe_getline(std::ifstream &config) {
     }
 }
 
-vector<int> Util::GetUserChoise() {
+vector<int> Util::GetUserChoise(string firstMsg) {
     int* Choises = new int[3];
     Choises[0] = 0;
     Choises[1] = 0;
@@ -162,6 +167,7 @@ vector<int> Util::GetUserChoise() {
     int a;
 
     cout << "Please set the algorithm for clustering" << endl<<endl;
+    cout << firstMsg << endl<<endl;
 
     cout << "Initialization" << endl;
     cout << "   1. Random selection of k points" << endl;

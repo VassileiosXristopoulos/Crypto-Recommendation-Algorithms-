@@ -18,6 +18,7 @@ string User::GetUserId() {
 }
 
 void User::ComputeSentiments() {
+    bool allZero=true;
     for(auto const & tweet : tweets){ // for each tweet of the user
         for(auto const & coin : tweet->GetAssociatedCoins()){ // for each coin of his tweet
             int index = coin->GetCoinIndex();
@@ -43,15 +44,26 @@ void User::ComputeSentiments() {
     }
     avg /= Util::amountOfCoins;
     for(auto & i : sentiment){
+
+
         if( i != INFINITY ){
             i -= avg;
         }
         else{
             i = 0;
         }
+        if( i != 0){
+            allZero = false;
+        }
     }
+    this->allZero = allZero;
+
 }
 
-vector<double>& User::GetSentimentVector() {
+vector<double> User::GetSentimentVector() {
     return this->sentiment;
+}
+
+bool User::AllZero() {
+    return this->allZero;
 }
