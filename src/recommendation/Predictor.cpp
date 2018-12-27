@@ -9,18 +9,18 @@ Predictor::Predictor(vector<User *> & persons, vector<User *> &representatives,C
     this->configuration = configuration;
     this->PersonUsers = persons;
     this->Representatives = representatives;
-    this->clusteringChoise =  Util::GetUserChoise("Please set the clustering algorithm for recommendation");
+    this->clusteringChoise =  {1,1,1};
     this->lsh_master = nullptr;
     this->clustermaster = nullptr;
 }
 
 void Predictor::PerfromPrediction(){
-    //LshPrediction();
+    LshPrediction();
     ClusteringPrediction();
 }
 
 void Predictor::ClusteringPrediction() {
-   // PredictPersonClustering();
+    PredictPersonClustering();
     cout << "Completed PredictPersonClustering"<<endl;
     PredictRepresentClustering();
     cout << "Completed PredictRepresentClustering"<<endl;
@@ -100,22 +100,25 @@ vector<pair<double, Coin *>> Predictor::ComputePredictions(User *user,vector<vec
          }); // sort with descending order
 */
     // keep "amountOfbestPreds" best recommendations
+    map<double, Coin *>::reverse_iterator it = recommendations.rbegin();
 
     vector<pair<double, Coin *>> returnVector;
-
     if(recommendations.size()>=amountOfbestPreds){ // get first (ordered) n elements
         int i =0;
-        for(auto const& elem : recommendations) {
-            returnVector.emplace_back(elem.first,elem.second);
+        while(it != recommendations.rend()) {
+            returnVector.emplace_back(it.operator*().first,it.operator*().second);
             if(++i == amountOfbestPreds)
                 break;
+            it++;
         }
     }
     else{
-        for(auto const& elem: recommendations) {
-            returnVector.emplace_back(elem.first,elem.second);
+        while(it != recommendations.rend()) {
+            returnVector.emplace_back(it.operator*().first,it.operator*().second);
+            it++;
         }
     }
+
     return returnVector;
    /* if(recommendations.size() >= amountOfbestPreds) {
         return vector<pair<double, Coin *>>(recommendations.begin(), recommendations.begin() + amountOfbestPreds);

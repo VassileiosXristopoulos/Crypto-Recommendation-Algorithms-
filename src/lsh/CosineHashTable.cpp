@@ -71,7 +71,7 @@ vector<Item*> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
         double distance = Util::cosineDistance(item->getContent(), datasetItem->getContent());
 
         if (item->getName().compare(datasetItem->getName()) != 0) {
-            Map.insert(make_pair(distance,item));
+            Map.insert(make_pair(distance,datasetItem));
         }
     }
 

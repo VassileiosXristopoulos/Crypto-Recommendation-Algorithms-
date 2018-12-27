@@ -166,7 +166,6 @@ vector<int> Util::GetUserChoise(string firstMsg) {
     Choises[2] = 0;
     int a;
 
-    cout << "Please set the algorithm for clustering" << endl<<endl;
     cout << firstMsg << endl<<endl;
 
     cout << "Initialization" << endl;
