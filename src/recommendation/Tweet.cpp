@@ -49,3 +49,7 @@ vector<Coin *> Tweet::GetAssociatedCoins() {
 double Tweet::GetScrore() {
     return score;
 }
+
+Tweet::~Tweet() {
+
+}

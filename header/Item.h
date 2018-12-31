@@ -27,6 +27,7 @@ public:
     vector<double>& getContent();
     void SetContent(vector<double>&);
     string getName();
+    void setName(string);
     void setGVector(vector<int>& h_i);
     vector<int>& getGVector();
     double GetPoint(int);

@@ -10,8 +10,8 @@ Cluster::Cluster() {
 }
 
 Cluster::~Cluster() {
-    if(Centroid != nullptr && Centroid->getName() == "null")
-        delete Centroid;
+   /* if(Centroid != nullptr && Centroid->getName() == "null")
+        delete Centroid;*/
 }
 /**
  * Sets an Item as Centroid of the Cluster
@@ -158,10 +158,11 @@ bool Cluster::kmeans() {
             // check if the centroid remains the same (condition checks if 2 contents are  equal)
             if (Centroid->getContent()[i] != newCentroid->getContent()[i]) {
 
-                if ("null" == Centroid->getName())
-                    delete Centroid;
-
-                this->Centroid = newCentroid;
+                this->Centroid->setName(newCentroid->getName());
+                this->Centroid->SetContent(newCentroid->getContent());
+                this->Centroid->setGVector(newCentroid->getGVector());
+                this->Centroid->SetCluster(newCentroid->GetCluster());
+                delete(newCentroid);
                 return false;
 
             }

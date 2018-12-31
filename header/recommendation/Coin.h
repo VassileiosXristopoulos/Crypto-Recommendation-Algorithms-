@@ -19,6 +19,7 @@ public:
     Coin(vector<string>, int);
     bool isCoin(string);
     int GetCoinIndex();
+    string getName();
 };
 
 

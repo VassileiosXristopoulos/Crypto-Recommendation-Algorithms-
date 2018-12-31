@@ -28,6 +28,7 @@ private:
 
 public:
     TwitterUserFactory(string,vector<Cluster*>&);
+    ~TwitterUserFactory();
     vector<User*>& GetPersonUsers();
     vector<User*>& GetRepresentatives();
 };

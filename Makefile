@@ -1,31 +1,49 @@
 CC=g++ -std=c++11
 CFLAGS=-Wall -g3 
-LFLAGS= -g3 -o cluster
-OBJS=obj/cluster.o obj/DataSetMap.o obj/Item.o obj/EucledianHashTable.o obj/hashFunction.o obj/HashNode.o obj/Util.o obj/cosineHashfunction.o obj/AHashTable.o obj/CosineHashTable.o obj/EucledianHypercube.o obj/CosineHypercube.o obj/CubeEdge.o obj/BinaryMap.o obj/AHypercube.o obj/ClusterMaster.o obj/Cluster.o obj/lsh.o obj/rangeSearch_consts.o obj/cube.o
+LFLAGS= -g3 -o recommendation
+OBJS=obj/recommendation.o obj/DataSetMap.o obj/Item.o obj/EucledianHashTable.o obj/hashFunction.o obj/HashNode.o obj/Util.o obj/cosineHashfunction.o obj/AHashTable.o obj/CosineHashTable.o obj/EucledianHypercube.o obj/CosineHypercube.o obj/CubeEdge.o obj/BinaryMap.o obj/AHypercube.o obj/ClusterMaster.o obj/Cluster.o obj/lsh.o obj/rangeSearch_consts.o obj/cube.o obj/Coin.o obj/Tweet.o obj/TwitterUserFactory.o obj/User.o obj/Predictor.o obj/Validator.o
 MOVE=$(shell mv *.o obj)
 
-all:cluster
+all:recommendation
 
-cluster:$(OBJS)
+recommendation:$(OBJS)
 	$(CC) $(CFLAGS) $(OBJS) $(LFLAGS) $(MOVE)
 
-obj/cluster.o: src/cluster.cpp
-	$(CC) $(CFLAGS) -c src/cluster.cpp
+obj/recommendation.o: src/recommendation.cpp
+	$(CC) $(CFLAGS) -c src/recommendation.cpp
 
-obj/ClusterMaster.o: src/ClusterMaster.cpp
-	$(CC) $(CFLAGS) -c src/ClusterMaster.cpp
+obj/Coin.o: src/recommendation/Coin.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/Coin.cpp
 
-obj/Cluster.o: src/Cluster.cpp
-	$(CC) $(CFLAGS) -c src/Cluster.cpp
+obj/Tweet.o: src/recommendation/Tweet.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/Tweet.cpp
 
-obj/rangeSearch_consts.o: src/rangeSearch_consts.cpp
-	$(CC) $(CFLAGS) -c src/rangeSearch_consts.cpp
+obj/TwitterUserFactory.o: src/recommendation/TwitterUserFactory.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/TwitterUserFactory.cpp
+
+obj/User.o: src/recommendation/User.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/User.cpp
+
+obj/Predictor.o: src/recommendation/Predictor.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/Predictor.cpp
+
+obj/Validator.o: src/recommendation/Validator.cpp
+	$(CC) $(CFLAGS) -c src/recommendation/Validator.cpp
+
+obj/ClusterMaster.o: src/clustering/ClusterMaster.cpp
+	$(CC) $(CFLAGS) -c src/clustering/ClusterMaster.cpp
+
+obj/Cluster.o: src/clustering/Cluster.cpp
+	$(CC) $(CFLAGS) -c src/clustering/Cluster.cpp
+
+obj/rangeSearch_consts.o: src/clustering/rangeSearch_consts.cpp
+	$(CC) $(CFLAGS) -c src/clustering/rangeSearch_consts.cpp
 
 obj/lsh.o: src/lsh/lsh.cpp
 	$(CC) $(CFLAGS) -c src/lsh/lsh.cpp 
 
-obj/DataSetMap.o: src/DataSetMap.cpp
-	$(CC) $(CFLAGS) -c src/DataSetMap.cpp 
+obj/DataSetMap.o: src/clustering/DataSetMap.cpp
+	$(CC) $(CFLAGS) -c src/clustering/DataSetMap.cpp 
 
 obj/Item.o: src/Item.cpp
 	$(CC) $(CFLAGS) -c src/Item.cpp

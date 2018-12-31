@@ -42,8 +42,16 @@ int main(int argv, char*argc[]){
     //lsh_factory->FindNCloserNeighboors(twitterUserFactory->GetPersonUsers()[0]);
 
     auto * predictor = new Predictor(twitterUserFactory->GetPersonUsers(),twitterUserFactory->GetRepresentatives(),
-            Clustermaster->config_info);
+            Clustermaster->config_info,output_file);
     predictor->PerfromPrediction();
+   // predictor->Validation();
 
-    delete (Clustermaster);
+    Util::DeleteCoinMap();
+    delete(predictor);
+    cout <<"Predictor deleted!"<<endl;
+    delete(Clustermaster);
+    cout << "Clustermaster deleted!"<<endl;
+    delete(twitterUserFactory);
+    cout << "twitterUserFactory deleted!"<<endl;
+
 }

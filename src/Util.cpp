@@ -232,6 +232,7 @@ void Util::SetupLexicon() {
     }
 }
 
+
 void Util::SetupCoinMap() {
     string FileLine;
     ifstream file(Consts::coinFile);
@@ -244,6 +245,12 @@ void Util::SetupCoinMap() {
             exit(0);
         }
         CoinMap.push_back(new Coin(CoinNames,(int)amountOfCoins++));
+    }
+}
+
+void Util::DeleteCoinMap() {
+    for(auto const & coin : CoinMap){
+        delete(coin);
     }
 }
 

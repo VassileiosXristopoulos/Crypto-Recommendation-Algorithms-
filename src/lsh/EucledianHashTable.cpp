@@ -115,6 +115,7 @@ int EucledianHashTable::size() {
 }
 
 vector<Item *> EucledianHashTable::findNCloserNeighboors(Item *item, int n) {
+    return vector<Item*>();
 }
 
 

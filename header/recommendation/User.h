@@ -16,14 +16,22 @@ private:
     string user_id;
     vector<Tweet*> tweets;
     bool allZero;
+    vector<double> nonNormalizedsentiments = vector<double>(Util::amountOfCoins, INFINITY);
     vector<double> sentiment = vector<double>(Util::amountOfCoins, INFINITY);
 public:
     User(string);
+    User(string,vector<Tweet*>,vector<double>,vector<double>);
+    ~User();
+    void deleteTweets();
     void addTweet(Tweet *);
+    vector<Tweet*> GetTweets();
     string GetUserId();
     void ComputeSentiments();
-    vector<double> GetSentimentVector();
+    vector<double>& GetSentimentVector();
+    void SetSentimentVector(vector<double>);
     bool AllZero();
+    void NormalizeVector();
+    vector<double>& GetNonNormalizedSentiments();
 };
 
 

@@ -20,4 +20,8 @@ int Coin::GetCoinIndex() {
     return index;
 }
 
+string Coin::getName() {
+    return names[0];
+}
+
 

@@ -41,7 +41,7 @@ private:
     void SetNextChoise();
     void ResetDataset();
     //void PrintResults(double);
-    vector<double> Silhouette();
+
     void SetupParameters();
     void SetupPredictionParameters();
 public:
@@ -53,7 +53,7 @@ public:
     vector<Cluster*> GetClusters();
     void ComputeVectorizedMembers();
     vector<vector<double>> GetVectorizedCluster(Cluster*);
-
+    double Silhouette();
 
 
 

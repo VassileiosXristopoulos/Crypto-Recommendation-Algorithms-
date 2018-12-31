@@ -14,7 +14,7 @@
 class lsh {
 private:
     vector<AHashTable*> LshHashTables;
-
+    vector<Item*>Dataset=vector<Item*>();
 public:
     lsh(int k,int L,int w,string& metric,DataSetMap *set);
     lsh(int k,int L,int w,vector<User *>set);

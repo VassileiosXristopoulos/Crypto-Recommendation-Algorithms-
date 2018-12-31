@@ -33,10 +33,9 @@ void TwitterUserFactory::ConstructPersonUsers(string inputFile) {
 
         allTweets.push_back(tweet);
     }
-    for(int i=0;i<PersonUsers.size();i++){ // finally, compute sentiment vector for each user
+    for(unsigned int i=0;i<PersonUsers.size();i++){ // finally, compute sentiment vector for each user
         PersonUsers[i]->ComputeSentiments();
         if(PersonUsers[i]->AllZero()){
-          //  PersonUsers.erase(find(PersonUsers.begin(),PersonUsers.end(),user));
           delete(PersonUsers[i]);
           PersonUsers[i] = nullptr;
         }
@@ -50,7 +49,7 @@ void TwitterUserFactory::ConstructPersonUsers(string inputFile) {
 void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
     for(auto const& cluster: clusters){ // for each cluster make a Representative user
         string user_id = to_string(getClusterIndex()); //  user's name is constructed from ascending variable
-        User* newUser = new User(user_id);
+       // User* newUser = new User(user_id);
         for(auto const& tweet : cluster->GetMembers()){ // iterate all cluster members (tweets vectorized TFIDF)
             string itemName = tweet.first; // get tweet id from vectorized tweet
             for(auto const& storedTweet : allTweets){
@@ -60,7 +59,7 @@ void TwitterUserFactory::ConstructRepresentatives(vector<Cluster*> clusters) {
             }
         }
     }
-    for(int i=0;i<RepresentativeUsers.size();i++){ // finally, compute sentiment vector for each user
+    for(unsigned int i=0;i<RepresentativeUsers.size();i++){ // finally, compute sentiment vector for each user
         RepresentativeUsers[i]->ComputeSentiments();
         if(RepresentativeUsers[i]->AllZero()){
             //  PersonUsers.erase(find(PersonUsers.begin(),PersonUsers.end(),user));
@@ -119,6 +118,22 @@ vector<User *>& TwitterUserFactory::GetPersonUsers() {
 
 vector<User *>& TwitterUserFactory::GetRepresentatives() {
     return RepresentativeUsers;
+}
+
+TwitterUserFactory::~TwitterUserFactory() {
+    if(!PersonUsers.empty()){
+        for(auto const & user: PersonUsers){
+            delete(user);
+        }
+    }
+
+    if(!RepresentativeUsers.empty()){
+        for(auto const & user: RepresentativeUsers){
+            user->deleteTweets();
+            delete(user);
+        }
+    }
+
 }
 
 

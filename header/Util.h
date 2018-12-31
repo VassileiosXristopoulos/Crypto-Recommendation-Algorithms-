@@ -56,6 +56,7 @@ public:
     static int safe_atoi(string);
     static string safe_getline(std::ifstream&);
     static vector<int> GetUserChoise(string);
+    static void DeleteCoinMap();
 };
 
 #endif //UTIL_H

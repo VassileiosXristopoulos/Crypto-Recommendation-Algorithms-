@@ -13,6 +13,17 @@ CosineHashTable::CosineHashTable(int size, int k) : AHashTable(size,k){
     this->k = k;
 }
 
+CosineHashTable::~CosineHashTable()  {
+    for(unsigned int i=0;i<Table.size();i++){
+        for(unsigned int j=0;j<Table[i].size();j++){
+            delete( Table[i][j]);
+        }
+    }
+    for(int i = 0; i<k; i++){
+        delete(cosine_vector[i]);
+    }
+}
+
 vector<int>* CosineHashTable::computeGVector(Item *item) {
     vector<int>*ret= new vector<int>(k);
     for( int i=0; i<k ;i++){
@@ -33,6 +44,7 @@ void CosineHashTable::add(Item *item) {
     int key = hash(item);
     Table[key].push_back(new HashNode(item,computeGVector(item)));
 }
+
 
 vector<Item*>  CosineHashTable::findCloserNeighbors(Item *item,double r) {
     int bucket = hash(item);
@@ -55,7 +67,6 @@ vector<Item*>  CosineHashTable::findCloserNeighbors(Item *item,double r) {
     }
     return ret;
 }
-
 
 vector<Item*> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
     int bucket = hash(item);
@@ -86,7 +97,7 @@ vector<Item*> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
     //ret.erase(unique(ret.begin(), ret.end()), ret.end());
     vector<Item*> returnVector;
 
-    if(Map.size()>=n){ // get first (ordered) n elements
+    if(((int)Map.size())>=n){ // get first (ordered) n elements
         int i =0;
         for(auto const& elem : Map) {
             returnVector.push_back(elem.second);
@@ -100,17 +111,6 @@ vector<Item*> CosineHashTable::findNCloserNeighboors(Item *item, int n) {
         }
     }
     return returnVector;
-}
-
-CosineHashTable::~CosineHashTable()  {
-    for(unsigned int i=0;i<Table.size();i++){
-        for(unsigned int j=0;j<Table[i].size();j++){
-            delete( Table[i][j]);
-        }
-    }
-    for(int i = 0; i<k; i++){
-        delete(cosine_vector[i]);
-    }
 }
 
 int CosineHashTable::size() {

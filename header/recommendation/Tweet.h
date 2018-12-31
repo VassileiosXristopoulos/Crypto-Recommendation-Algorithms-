@@ -22,6 +22,7 @@ private:
     void calculateScore();
 public:
     explicit Tweet(vector<string>&);
+    ~Tweet();
     string GetTweetId();
     vector<Coin*> GetAssociatedCoins();
     double GetScrore();
